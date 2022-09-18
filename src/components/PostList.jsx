@@ -1,7 +1,7 @@
 import React from 'react'
 import PostItem from './PostItem'
 
-export default function PostList({ posts, title, postRemove }) {
+export default function PostList({ posts, title, remove }) {
 
 
 
@@ -9,7 +9,7 @@ export default function PostList({ posts, title, postRemove }) {
 		<div>
 			<h1>{title}</h1>
 			{posts.map((post, index) => (
-				<PostItem num={index + 1} post={post} postRemove={postRemove} key={post.id} />
+				<PostItem num={index + 1} post={post} remove={remove} key={post.id} />
 			))}
 		</div>
 	)
