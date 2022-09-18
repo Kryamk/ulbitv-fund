@@ -4,42 +4,46 @@ import React, { useState, useEffect } from 'react';
 import './styles/App.css';
 import PostList from './components/PostList';
 import PostForm from './components/PostForm';
+import MySelect from './components/UI/MySelect/MySelect';
 
 function App() {
 
 	const [posts, setPosts] = useState([
-		{ id: 1, title: 'Javascript 1', body: 'Description' },
-		{ id: 2, title: 'Javascript 2', body: 'Description' },
-		{ id: 3, title: 'Javascript 3', body: 'Description' },
+		{ id: 1, title: 'Javascript', body: 'one' },
+		{ id: 2, title: 'Python', body: 'two' },
+		{ id: 3, title: 'C++', body: 'three' },
 	])
 
+	const [selectedSort, setSelectedSort] = useState('');
 
 	const createPost = (post) => {
 		setPosts([...posts, post]);
 	}
-	// const removePost = (id) => {
-	// 	let newPosts = posts.filter(post => post.id !== id);
-	// 	setPosts(newPosts);
-	// }
 	const removePost = (post) => {
 		let newPosts = posts.filter(p => p.id !== post.id);
 		setPosts(newPosts);
 	}
-
-	// useEffect(() => {
-	//   first
-
-	//   return () => {
-	// 	second
-	//   }
-	// }, [third])
+	const sortPosts = (sort) => {
+		setSelectedSort(sort)
+		setPosts([...posts].sort((a, b) => a[sort].localeCompare(b[sort])))
+	}
 
 
 	return (
 		<div className="App">
 
 			<PostForm create={createPost} />
-			{posts.length !== 0
+			<div>
+				<hr style={{ margin: '15px 0' }} />
+				<MySelect
+					defaultValue='Сортировка'
+					options={[{ value: 'title', name: 'По названию' }, { value: 'body', name: 'По описанию' }]}
+					value={selectedSort}
+					onChange={sortPosts}
+				// onChange={setSelectedSort}
+				/>
+			</div>
+			{posts.length
 				?
 				<PostList posts={posts} title={'Посты про Javascript'} remove={removePost} />
 				:
