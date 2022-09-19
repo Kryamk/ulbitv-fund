@@ -2,7 +2,7 @@ import React from 'react'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
 import PostItem from './PostItem'
 
-export default function PostList({ posts, title, remove }) {
+export default function PostList({ posts, title, remove}) {
 
 	if (!posts.length) {
 		return (

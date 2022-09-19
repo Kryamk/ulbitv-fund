@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 // import Counter from './components/Counter';
 // import CounterClass from './components/CounterClass';
 import './styles/App.css';
@@ -8,13 +8,27 @@ import PostFilter from './components/PostFilter';
 import MyModal from './components/UI/MyModal/MyModal';
 import MyButton from './components/UI/button/MyButton';
 import { usePosts } from './hooks/usePosts';
+import PostService from './API/PostService';
+import Loader from './components/UI/Loader/Loader';
 
 function App() {
 	console.log('render App');
-	const [posts, setPosts] = useState([ { id: 1, title: 'Javascript', body: 'one' }, { id: 2, title: 'Python', body: 'two' }, { id: 3, title: 'C++', body: 'three' }, ])
+	const [posts, setPosts] = useState([])
 	const [filter, setFilter] = useState({ sort: '', query: '', })
 	const [modal, setModal] = useState(false)
 	const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
+	const [isPostsLoading, setIsPostsLoading] = useState(false)
+
+	useEffect(() => {
+		fetchPosts();
+	}, [])
+
+	async function fetchPosts() {
+		setIsPostsLoading(true)
+		const posts = await PostService.getAll();
+		setPosts(posts);
+		setIsPostsLoading(false)
+	}
 
 
 	const createPost = (post) => {
@@ -28,13 +42,17 @@ function App() {
 
 	return (
 		<div className="App">
-			<MyButton onClick={()=>setModal(true)} style={{marginTop:30}}>Modal</MyButton>
+			<MyButton onClick={() => setModal(true)} style={{ marginTop: 30 }}>Modal</MyButton>
 			<MyModal visible={modal} setVisible={setModal}>
 				<PostForm create={createPost} />
 			</MyModal>
 			<hr style={{ margin: '15px 0' }} />
 			<PostFilter filter={filter} setFilter={setFilter} />
-			<PostList posts={sortedAndSearchedPosts} title={'Посты про Javascript'} remove={removePost} />
+			{isPostsLoading
+				? <div style={{ display: 'flex', justifyContent: 'center', marginTop: 50 }}><Loader /></div>
+				: <PostList posts={sortedAndSearchedPosts} title={'Посты про Javascript'} remove={removePost} />
+			}
+
 		</div>
 	);
 }
