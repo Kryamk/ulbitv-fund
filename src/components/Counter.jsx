@@ -4,6 +4,7 @@ export default function Counter() {
 	let [likes, setLikes] = useState(0);
 	let [value, setValue] = useState('text');
 
+
 	let increment = () => {
 		setLikes(likes += 1);
 	}

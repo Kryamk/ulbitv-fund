@@ -17,7 +17,7 @@ export default function PostList({ posts, title, remove}) {
 			<TransitionGroup>
 				{posts.map((post, index) => (
 					<CSSTransition classNames="post" timeout={500} key={post.id}>
-						<PostItem num={index + 1} post={post} remove={remove}  />
+						<PostItem num={post.id} post={post} remove={remove}  />
 					</CSSTransition>
 				))}
 			</TransitionGroup>
