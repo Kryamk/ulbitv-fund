@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import About from '../pages/About'
 import Error from '../pages/Error'
 import PostIdPage from '../pages/PostIdPage'
@@ -12,8 +12,8 @@ export default function AppRouter() {
 			<Route path="/about"> <About /> </Route>
 			<Route exact path="/posts"> <Posts /> </Route>
 			<Route exact path="/posts/:id"> <PostIdPage /> </Route>
-			<Route> <Error /> </Route>
-			{/* <Redirect to="/posts" /> */}
+			{/* <Route> <Error /> </Route> */}
+			<Redirect to="/posts" />
 		</Switch>
 	)
 }
