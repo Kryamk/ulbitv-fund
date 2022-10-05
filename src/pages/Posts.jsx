@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import Counter from './components/Counter';
 // import CounterClass from './components/CounterClass';
 import '../styles/App.css';
@@ -13,9 +13,11 @@ import Loader from '../components/UI/Loader/Loader';
 import { useFetching } from '../hooks/useFetching';
 import { getPageCount } from '../utils/pages';
 import Pagination from '../components/UI/pagination/Pagination';
+import { useObserver } from '../hooks/useObserver';
+import MySelect from '../components/UI/select/MySelect';
 
 function Posts() {
-	console.log('render Posts');
+	// console.log('render Posts');
 	const [posts, setPosts] = useState([])
 	const [filter, setFilter] = useState({ sort: '', query: '', })
 	const [modal, setModal] = useState(false)
@@ -23,18 +25,27 @@ function Posts() {
 	const [totalPages, setTotalPages] = useState(0)
 	const [limit, setLimit] = useState(10)
 	const [page, setPage] = useState(1)
+	const lastElement = useRef();
+
 
 	const [fetchPosts, isPostsLoading, postError] = useFetching(async (limit, page) => {
 		const response = await PostService.getAll(limit, page);
-		setPosts(response.data);
+		setPosts([...posts, ...response.data]);
+		// setPosts(response.data);
 		const totalCount = response.headers['x-total-count']
 		setTotalPages(getPageCount(totalCount, limit));
 	})
 
+
+	useObserver(lastElement, page < totalPages, isPostsLoading, () => {
+		setPage(page + 1)
+	})
+
+
 	useEffect(() => {
-		fetchPosts(limit,page)
+		fetchPosts(limit, page)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, [page, limit])
 
 
 	const createPost = (post) => {
@@ -47,7 +58,7 @@ function Posts() {
 	}
 	const changePage = (page) => {
 		setPage(page);
-		fetchPosts(limit,page)
+		// fetchPosts(limit,page)
 	}
 
 	return (
@@ -58,14 +69,30 @@ function Posts() {
 			</MyModal>
 			<hr style={{ margin: '15px 0' }} />
 			<PostFilter filter={filter} setFilter={setFilter} />
+			<MySelect
+				value={limit}
+				onChange={value => setLimit(value)}
+				defaultValue='Лимит'
+				options={[
+					{ value: 5, name: 5 },
+					{ value: 10, name: 10 },
+					{ value: 20, name: 20 },
+					{ value: -1, name: 'Все' },
+				]}
+			/>
 			{postError &&
 				<h1>Произошла ошибка ${postError}</h1>
 			}
-			{isPostsLoading
+			<PostList posts={sortedAndSearchedPosts} title={'Посты про Javascript'} remove={removePost} />
+			<div ref={lastElement} style={{ height: 20, background: 'tomato' }}></div>
+			{isPostsLoading &&
+				<div style={{ display: 'flex', justifyContent: 'center', marginTop: 50 }}><Loader /></div>
+			}
+			{/* {isPostsLoading
 				? <div style={{ display: 'flex', justifyContent: 'center', marginTop: 50 }}><Loader /></div>
 				: <PostList posts={sortedAndSearchedPosts} title={'Посты про Javascript'} remove={removePost} />
-			}
-			<Pagination totalPages={totalPages} page={page} changePage={changePage}/>
+			} */}
+			<Pagination totalPages={totalPages} page={page} changePage={changePage} />
 
 		</div>
 	);

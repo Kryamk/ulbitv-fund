@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
 import MyButton from '../components/UI/button/MyButton'
 import MyInput from '../components/UI/input/MyInput'
-import {AuthContext} from './../context';
+import { AuthContext } from './../context';
 
 export default function Login() {
-	const {isAuth, setIsAuth} = useContext(AuthContext)
-	const login = event =>{
+	const { setIsAuth } = useContext(AuthContext)
+	const login = event => {
 		event.preventDefault();
 		setIsAuth(true);
 		localStorage.setItem('auth', 'true')
