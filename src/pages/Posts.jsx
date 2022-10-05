@@ -28,6 +28,7 @@ function Posts() {
 	const lastElement = useRef();
 
 
+
 	const [fetchPosts, isPostsLoading, postError] = useFetching(async (limit, page) => {
 		const response = await PostService.getAll(limit, page);
 		setPosts([...posts, ...response.data]);
