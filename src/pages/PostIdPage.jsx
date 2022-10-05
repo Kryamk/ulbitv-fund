@@ -40,7 +40,7 @@ export default function PostIdPage() {
 					? <Loader/>
 					: <div style={{margin: 20}}>
 						{postComments.map(el =>
-							<div style={{marginTop: 15}}>
+							<div style={{marginTop: 15}} key={el.id}>
 								<h3>{el.name}</h3>
 								<h4>{el.email}</h4>
 								<p>{el.body}</p>

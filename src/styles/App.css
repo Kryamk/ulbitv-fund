@@ -63,12 +63,12 @@
     width: 100vw;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-around;
     padding: 0 15px;
     background: lightgray;
 }
 
 .navbar__links {
     display: flex;
-    margin-left: 20px;
+    gap: 20px;
 }
